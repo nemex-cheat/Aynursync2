@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aynur Sync - Ultimate Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: { 900: '#0a0a0f', 800: '#12121a', 700: '#1a1a2e', 600: '#252542', 500: '#2d2d4a' },
+                        accent: { cyan: '#06b6d4', blue: '#3b82f6', purple: '#8b5cf6', pink: '#ec4899', green: '#10b981' },
+                        neon: { cyan: '#00f0ff', blue: '#3b82f6', purple: '#a855f7', pink: '#ec4899' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background: #0a0a0f; overflow-x: hidden; }
+        .glass { background: rgba(26, 26, 46, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        .glass-dark { background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .neon-cyan { box-shadow: 0 0 20px rgba(6, 182, 212, 0.4), 0 0 40px rgba(6, 182, 212, 0.1); }
+        .neon-purple { box-shadow: 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.1); }
+        .gradient-cyan { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
+        .gradient-purple { background: linear-gradient(135deg, #ec4899, #8b5cf6); }
+        .gradient-green { background: linear-gradient(135deg, #10b981, #06b6d4); }
+        .gradient-text-cyan { background: linear-gradient(135deg, #00f0ff, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gradient-text-purple { background: linear-gradient(135deg, #ec4899, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(6, 182, 212, 0.2); }
+        .btn-press:active { transform: scale(0.96); }
+        .pulse-dot { animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+        .slide-up { animation: slideUp 0.4s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .input-glow:focus { box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.3); border-color: #06b6d4; }
+        .tab-active { background: linear-gradient(135deg, #06b6d4, #3b82f6); color: white; }
+        .bottom-nav { background: rgba(18, 18, 26, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.05); }
+        .floating-btn { box-shadow: 0 4px 20px rgba(6, 182, 212, 0.4), 0 0 0 4px rgba(6, 182, 212, 0.1); }
+        .room-card { border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s; }
+        .room-card:hover { border-color: rgba(6, 182, 212, 0.3); transform: translateY(-2px); }
+        .sync-btn { background: linear-gradient(135deg, #06b6d4, #3b82f6); box-shadow: 0 4px 20px rgba(6, 182, 212, 0.4); transition: all 0.3s; }
+        .sync-btn:hover { box-shadow: 0 6px 30px rgba(6, 182, 212, 0.6); transform: translateY(-1px); }
+        .sync-btn:active { transform: scale(0.98); }
+        @media (max-width: 768px) { .mobile-full { width: 100vw; margin-left: -1rem; } }
+    </style>
+</head>
+<body class="bg-dark-900 text-white min-h-screen">
+
+    <!-- Auth Screen (Login/Register) -->
+    <div id="authScreen" class="fixed inset-0 z-50 bg-dark-900 flex flex-col items-center justify-center p-6">
+        <div class="text-center mb-8 slide-up">
+            <div class="w-20 h-20 mx-auto mb-4 relative">
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#06b6d4"/><stop offset="100%" style="stop-color:#ec4899"/></linearGradient></defs>
+                    <polygon points="50,10 90,30 90,50 50,70 10,50 10,30" fill="none" stroke="url(#logoGrad)" stroke-width="3"/>
+                    <polygon points="50,30 70,40 70,55 50,65 30,55 30,40" fill="none" stroke="url(#logoGrad)" stroke-width="2" opacity="0.7"/>
+                    <polygon points="50,50 60,55 60,62 50,67 40,62 40,55" fill="url(#logoGrad)" opacity="0.5"/>
+                </svg>
+            </div>
+            <h1 class="text-4xl font-bold mb-1">Aynur <span class="gradient-text-cyan">Sync</span></h1>
+            <p class="text-gray-500 text-sm tracking-[0.3em] uppercase">Ultimate Experience</p>
+        </div>
+
+        <!-- Auth Tabs -->
+        <div class="w-full max-w-sm mb-6">
+            <div class="glass rounded-full p-1 flex">
+                <button id="tabLogin" onclick="switchAuthTab('login')" class="flex-1 py-3 rounded-full text-sm font-semibold transition-all tab-active">Giriş Yap</button>
+                <button id="tabRegister" onclick="switchAuthTab('register')" class="flex-1 py-3 rounded-full text-sm font-semibold transition-all text-gray-400">Kayıt Ol</button>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="w-full max-w-sm space-y-4 slide-up">
+            <div>
+                <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Kullanıcı Adı</label>
+                <div class="glass rounded-2xl flex items-center px-4 py-3">
+                    <i class="fas fa-user text-gray-500 mr-3"></i>
+                    <input type="text" id="loginUsername" placeholder="Kullanıcı adınız" class="bg-transparent flex-1 outline-none text-white placeholder-gray-600">
+                </div>
+            </div>
+            <div>
+                <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Şifre</label>
+                <div class="glass rounded-2xl flex items-center px-4 py-3">
+                    <i class="fas fa-lock text-gray-500 mr-3"></i>
+                    <input type="password" id="loginPassword" placeholder="Şifreniz" class="bg-transparent flex-1 outline-none text-white placeholder-gray-600">
+                    <button onclick="togglePassword('loginPassword')" class="text-gray-500"><i class="fas fa-eye"></i></button>
+                </div>
+            </div>
+            <div class="flex items-center justify-between text-sm">
+                <label class="flex items-center gap-2 text-gray-400 cursor-pointer">
+                    <input type="checkbox" id="rememberMe" class="w-4 h-4 accent-accent-cyan rounded">
+                    <span>Beni Hatırla</span>
+                </label>
+                <button onclick="showForgotPassword()" class="text-accent-cyan hover:underline">Şifremi Unuttum</button>
+            </div>
+            <button onclick="login()" class="w-full py-4 gradient-cyan rounded-2xl font-bold text-lg text-white btn-press neon-cyan">Giriş Yap</button>
+            <div class="relative my-4">
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-dark-600"></div></div>
+                <div class="relative flex justify-center"><span class="px-4 bg-dark-900 text-gray-500 text-sm">veya</span></div>
+            </div>
+            <button onclick="guestLogin()" class="w-full py-3 glass rounded-2xl font-semibold text-gray-400 hover:text-white transition btn-press">
+                <i class="fas fa-arrow-right mr-2"></i>Misafir Olarak Devam Et
+            </button>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerForm" class="w-full max-w-sm space-y-4 hidden slide-up">
+            <div>
+                <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Kullanıcı Adı</label>
+                <div class="glass rounded-2xl flex items-center px-4 py-3">
+                    <i class="fas fa-user text-gray-500 mr-3"></i>
+                    <input type="text" id="regUsername" placeholder="Benzersiz kullanıcı adı" class="bg-transparent flex-1 outline-none text-white placeholder-gray-600">
+                </div>
+                <p class="text-xs text-gray-600 mt-1">En az 3 karakter, boşluk olmadan</p>
+            </div>
+            <div>
+                <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Şifre</label>
+                <div class="glass rounded-2xl flex items-center px-4 py-3">
+                    <i class="fas fa-lock text-gray-500 mr-3"></i>
+                    <input type="password" id="regPassword" placeholder="Güçlü şifre" class="bg-transparent flex-1 outline-none text-white placeholder-gray-600">
+                    <button onclick="togglePassword('regPassword')" class="text-gray-500"><i class="fas fa-eye"></i></button>
+                </div>
+                <div class="mt-2 h-1 bg-dark-700 rounded-full overflow-hidden">
+                    <div id="passwordStrength" class="h-full w-0 transition-all duration-300"></div>
+                </div>
+                <p class="text-xs text-gray-600 mt-1">Şifre gücü</p>
+            </div>
+            <div>
+                <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Şifre Tekrar</label>
+                <div class="glass rounded-2xl flex items-center px-4 py-3">
+                    <i class="fas fa-lock text-gray-500 mr-3"></i>
+                    <input type="password" id="regPassword2" placeholder="Şifreyi tekrar girin" class="bg-transparent flex-1 outline-none text-white placeholder-gray-600">
+                </div>
+            </div>
+            <label class="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" id="acceptTerms" class="w-5 h-5 accent-accent-cyan rounded">
+                <span class="text-sm text-gray-400"><a href="#" onclick="showTerms()" class="text-accent-cyan hover:underline">Kullanım Koşulları</a>'nı kabul ediyorum</span>
+            </label>
+            <button onclick="register()" class="w-full py-4 gradient-purple rounded-2xl font-bold text-lg text-white btn-press neon-purple">Kayıt Ol</button>
+            <div class="relative my-4">
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-dark-600"></div></div>
+                <div class="relative flex justify-center"><span class="px-4 bg-dark-900 text-gray-500 text-sm">veya</span></div>
+            </div>
+            <button onclick="guestLogin()" class="w-full py-3 glass rounded-2xl font-semibold text-gray-400 hover:text-white transition btn-press">
+                <i class="fas fa-arrow-right mr-2"></i>Misafir Olarak Devam Et
+            </button>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="hidden min-h-screen pb-24">
+        <!-- Top Bar -->
+        <header class="glass sticky top-0 z-40 px-4 py-3">
+            <div class="max-w-lg mx-auto flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="w-10 h-10 glass rounded-xl flex items-center justify-center btn-press">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                    <div class="flex items-center gap-2">
+                        <svg viewBox="0 0 24 24" class="w-8 h-8">
+                            <defs><linearGradient id="smallLogo" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#06b6d4"/><stop offset="100%" style="stop-color:#ec4899"/></linearGradient></defs>
+                            <polygon points="12,3 20,7 20,11 12,15 4,11 4,7" fill="none" stroke="url(#smallLogo)" stroke-width="1.5"/>
+                            <polygon points="12,7 16,9 16,12 12,14 8,12 8,9" fill="none" stroke="url(#smallLogo)" stroke-width="1" opacity="0.6"/>
+                        </svg>
+                        <span class="text-xl font-bold">Aynur <span class="gradient-text-cyan">Sync</span></span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleNotifications()" class="w-10 h-10 glass rounded-xl flex items-center justify-center btn-press relative">
+                        <i class="fas fa-bell text-lg"></i>
+                        <span id="notifBadge" class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs flex items-center justify-center hidden">0</span>
+                    </button>
+                    <button onclick="toggleTheme()" class="w-10 h-10 glass rounded-xl flex items-center justify-center btn-press">
+                        <i class="fas fa-sun text-lg" id="themeIcon"></i>
+                    </button>
+                    <button onclick="showProfile()" class="w-10 h-10 rounded-xl overflow-hidden border-2 border-accent-cyan btn-press">
+                        <div id="profileAvatar" class="w-full h-full gradient-cyan flex items-center justify-center text-white font-bold">A</div>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard -->
+        <main class="max-w-lg mx-auto px-4 pt-4 space-y-4">
+            <!-- Welcome Card -->
+            <div class="glass rounded-3xl p-5 flex items-center gap-4">
+                <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-accent-cyan flex-shrink-0">
+                    <div id="dashAvatar" class="w-full h-full gradient-cyan flex items-center justify-center text-white font-bold text-xl">A</div>
+                </div>
+                <div class="flex-1">
+                    <h2 class="text-lg font-bold">Hoş Geldin, <span id="dashUsername">admin</span>!</h2>
+                    <p class="text-gray-400 text-sm" id="dashStatus">Hazır</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold gradient-text-cyan" id="syncCount">0</div>
+                    <div class="text-xs text-gray-500 uppercase">Sync</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold gradient-text-purple" id="fileCount">0</div>
+                    <div class="text-xs text-gray-500 uppercase">Dosya</div>
+                </div>
+            </div>
+
+            <!-- Quick Sync Card -->
+            <div class="glass rounded-3xl p-5 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-accent-cyan/10 rounded-full blur-3xl"></div>
+                <div class="relative flex items-center gap-4 mb-4">
+                    <div class="w-14 h-14 gradient-cyan rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-sync-alt text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">Hızlı Senkronizasyon</h3>
+                        <p class="text-gray-400 text-sm" id="syncStatus">Hazır - Son sync: -</p>
+                    </div>
+                </div>
+                <div class="h-2 bg-dark-700 rounded-full overflow-hidden mb-4">
+                    <div id="syncProgress" class="h-full gradient-cyan w-0 transition-all duration-500"></div>
+                </div>
+                <button onclick="quickSync()" class="w-full py-4 sync-btn rounded-2xl font-bold text-lg text-white btn-press flex items-center justify-center gap-2">
+                    <span>SYNC</span>
+                    <i class="fas fa-sync-alt" id="syncIcon"></i>
+                </button>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-3 gap-3">
+                <div class="glass rounded-2xl p-4 text-center card-hover">
+                    <div class="w-10 h-10 gradient-cyan rounded-xl flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-folder text-white"></i>
+                    </div>
+                    <div class="text-xl font-bold" id="statFiles">0</div>
+                    <div class="text-xs text-gray-500 uppercase">Dosya</div>
+                </div>
+                <div class="glass rounded-2xl p-4 text-center card-hover">
+                    <div class="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-bolt text-white"></i>
+                    </div>
+                    <div class="text-xl font-bold" id="statSpeed">0</div>
+                    <div class="text-xs text-gray-500 uppercase">MB/s Hız</div>
+                </div>
+                <div class="glass rounded-2xl p-4 text-center card-hover">
+                    <div class="w-10 h-10 gradient-green rounded-xl flex items-center justify-center mx-auto mb-2">
+                        <i class="fas fa-clock text-white"></i>
+                    </div>
+                    <div class="text-xl font-bold" id="statTime">--:--:--</div>
+                    <div class="text-xs text-gray-500 uppercase">Saat</div>
+                </div>
+            </div>
+
+            <!-- Active Rooms -->
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-bold">Aktif Odalar</h3>
+                    <button onclick="showAllRooms()" class="text-accent-cyan text-sm hover:underline">Tümü</button>
+                </div>
+                <div id="activeRooms" class="space-y-3">
+                    <div class="glass rounded-2xl p-4 text-center text-gray-500 py-8">
+                        <i class="fas fa-tv text-3xl mb-2 opacity-50"></i>
+                        <p>Henüz aktif oda yok</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-bold">Son Aktiviteler</h3>
+                    <button onclick="showAllActivity()" class="text-accent-cyan text-sm hover:underline">Tümü</button>
+                </div>
+                <div id="recentActivity" class="space-y-3">
+                    <div class="glass rounded-2xl p-4 flex items-center gap-3">
+                        <div class="w-10 h-10 gradient-green rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-semibold">Senkronizasyon tamamlandı</p>
+                            <p class="text-sm text-gray-400">124 dosya güncellendi</p>
+                        </div>
+                        <span class="text-xs text-gray-500">2 dk önce</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Nav -->
+        <nav class="bottom-nav fixed bottom-0 w-full z-40 px-4 py-2">
+            <div class="max-w-lg mx-auto flex items-center justify-around">
+                <button onclick="navigate('home')" class="nav-btn flex flex-col items-center gap-1 py-2 px-4 text-accent-cyan" data-page="home">
+                    <i class="fas fa-home text-xl"></i>
+                    <span class="text-xs">Ana Sayfa</span>
+                </button>
+                <button onclick="navigate('content')" class="nav-btn flex flex-col items-center gap-1 py-2 px-4 text-gray-500 hover:text-white transition" data-page="content">
+                    <i class="fas fa-desktop text-xl"></i>
+                    <span class="text-xs">İçerik</span>
+                </button>
+                <button onclick="showCreateRoom()" class="w-14 h-14 gradient-cyan rounded-full flex items-center justify-center -mt-6 floating-btn btn-press">
+                    <i class="fas fa-sync-alt text-2xl text-white"></i>
+                </button>
+                <button onclick="navigate('profile')" class="nav-btn flex flex-col items-center gap-1 py-2 px-4 text-gray-500 hover:text-white transition" data-page="profile">
+                    <i class="fas fa-user text-xl"></i>
+                    <span class="text-xs">Profil</span>
+                </button>
+                <button onclick="navigate('more')" class="nav-btn flex flex-col items-center gap-1 py-2 px-4 text-gray-500 hover:text-white transition" data-page="more">
+                    <i class="fas fa-ellipsis-h text-xl"></i>
+                    <span class="text-xs">Diğer</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleSidebar()"></div>
+        <div class="absolute left-0 top-0 bottom-0 w-72 glass-dark p-6 transform -translate-x-full transition-transform duration-300" id="sidebarContent">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-xl font-bold">Menü</h2>
+                <button onclick="toggleSidebar()" class="w-10 h-10 glass rounded-xl flex items-center justify-center"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-2">
+                <button onclick="navigate('home'); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-dark-700 transition text-left">
+                    <i class="fas fa-home text-accent-cyan"></i><span>Ana Sayfa</span>
+                </button>
+                <button onclick="navigate('content'); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-dark-700 transition text-left">
+                    <i class="fas fa-desktop text-accent-purple"></i><span>İçerik</span>
+                </button>
+                <button onclick="showCreateRoom(); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-dark-700 transition text-left">
+                    <i class="fas fa-plus-circle text-accent-green"></i><span>Oda Kur</span>
+                </button>
+                <button onclick="navigate('profile'); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-dark-700 transition text-left">
+                    <i class="fas fa-user text-accent-pink"></i><span>Profil</span>
+                </button>
+                <button onclick="showLegal(); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-dark-700 transition text-left">
+                    <i class="fas fa-shield-alt text-yellow-500"></i><span>Yasal Beyan</span>
+                </button>
+                <button onclick="showTerms(); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-dark-700 transition text-left">
+                    <i class="fas fa-file-contract text-gray-400"></i><span>Kullanım Koşulları</span>
+                </button>
+                <button onclick="showPrivacy(); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-dark-700 transition text-left">
+                    <i class="fas fa-lock text-gray-400"></i><span>Gizlilik Politikası</span>
+                </button>
+                <div class="border-t border-dark-600 my-4"></div>
+                <button onclick="showCreators(); toggleSidebar()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-dark-700 transition text-left">
+                    <i class="fas fa-users text-accent-cyan"></i><span>Yapımcılar</span>
+                </button>
+                <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 transition text-left text-red-400">
+                    <i class="fas fa-sign-out-alt"></i><span>Çıkış Yap</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Room Modal -->
+    <div id="createRoomModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('createRoomModal')"></div>
+        <div class="relative w-full sm:max-w-md glass-dark rounded-t-3xl sm:rounded-3xl p-6 max-h-[90vh] overflow-y-auto scrollbar-hide">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold">Yeni Oda Kur</h3>
+                <button onclick="closeModal('createRoomModal')" class="w-10 h-10 glass rounded-xl flex items-center justify-center"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Oda Adı</label>
+                    <div class="glass rounded-2xl flex items-center px-4 py-3">
+                        <i class="fas fa-tv text-gray-500 mr-3"></i>
+                        <input type="text" id="roomName" placeholder="Örn: Film Gecesi" class="bg-transparent flex-1 outline-none text-white placeholder-gray-600">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Senkronize İçerik</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="setContentType('youtube')" id="btnYoutube" class="glass rounded-2xl p-4 text-center border-2 border-transparent hover:border-accent-cyan transition">
+                            <i class="fab fa-youtube text-2xl text-red-500 mb-2"></i>
+                            <p class="text-sm font-semibold">YouTube Linki</p>
+                        </button>
+                        <button onclick="setContentType('raw')" id="btnRaw" class="glass rounded-2xl p-4 text-center border-2 border-transparent hover:border-accent-cyan transition">
+                            <i class="fas fa-link text-2xl text-accent-cyan mb-2"></i>
+                            <p class="text-sm font-semibold">Raw/Direkt Link</p>
+                        </button>
+                    </div>
+                </div>
+                <div id="youtubeInput" class="hidden">
+                    <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">YouTube URL</label>
+                    <div class="glass rounded-2xl flex items-center px-4 py-3">
+                        <i class="fab fa-youtube text-gray-500 mr-3"></i>
+                        <input type="text" id="ytUrl" placeholder="https://youtube.com/watch?v=..." class="bg-transparent flex-1 outline-none text-white placeholder-gray-600">
+                    </div>
+                </div>
+                <div id="rawInput" class="hidden">
+                    <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Direkt Video URL (MP4, M3U8, GitHub Raw)</label>
+                    <div class="glass rounded-2xl flex items-center px-4 py-3">
+                        <i class="fas fa-link text-gray-500 mr-3"></i>
+                        <input type="text" id="rawUrl" placeholder="https://..." class="bg-transparent flex-1 outline-none text-white placeholder-gray-600">
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="roomPrivate" class="w-5 h-5 accent-accent-cyan rounded" onchange="toggleRoomPassword()">
+                    <label for="roomPrivate" class="text-sm">Şifreli Oda</label>
+                </div>
+                <div id="roomPasswordDiv" class="hidden">
+                    <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Oda Şifresi</label>
+                    <div class="glass rounded-2xl flex items-center px-4 py-3">
+                        <i class="fas fa-lock text-gray-500 mr-3"></i>
+                        <input type="password" id="roomPassword" placeholder="Şifre" class="bg-transparent flex-1 outline-none text-white placeholder-gray-600">
+                    </div>
+                </div>
+                <button onclick="createRoom()" class="w-full py-4 gradient-cyan rounded-2xl font-bold text-lg text-white btn-press neon-cyan">Oda Kur</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Room Modal -->
+    <div id="joinRoomModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('joinRoomModal')"></div>
+        <div class="relative w-full sm:max-w-md glass-dark rounded-t-3xl sm:rounded-3xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold">Odaya Katıl</h3>
+                <button onclick="closeModal('joinRoomModal')" class="w-10 h-10 glass rounded-xl flex items-center justify-center"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Oda Kodu veya Davet Linki</label>
+                    <div class="glass rounded-2xl flex items-center px-4 py-3">
+                        <i class="fas fa-key text-gray-500 mr-3"></i>
+                        <input type="text" id="joinCode" placeholder="ABC123 veya https://..." class="bg-transparent flex-1 outline-none text-white placeholder-gray-600">
+                    </div>
+                </div>
+                <div id="joinPasswordDiv" class="hidden">
+                    <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Oda Şifresi</label>
+                    <div class="glass rounded-2xl flex items-center px-4 py-3">
+                        <i class="fas fa-lock text-gray-500 mr-3"></i>
+                        <input type="password" id="joinRoomPassword" placeholder="Şifre" class="bg-transparent flex-1 outline-none text-white placeholder-gray-600">
+                    </div>
+                </div>
+                <button onclick="joinRoom()" class="w-full py-4 gradient-purple rounded-2xl font-bold text-lg text-white btn-press neon-purple">Katıl</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('profileModal')"></div>
+        <div class="relative w-full sm:max-w-md glass-dark rounded-t-3xl sm:rounded-3xl p-6 max-h-[90vh] overflow-y-auto scrollbar-hide">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold">Profil</h3>
+                <button onclick="closeModal('profileModal')" class="w-10 h-10 glass rounded-xl flex items-center justify-center"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="text-center mb-6">
+                <div class="w-24 h-24 mx-auto rounded-full overflow-hidden border-3 border-accent-cyan mb-3">
+                    <div id="profileBigAvatar" class="w-full h-full gradient-cyan flex items-center justify-center text-white font-bold text-3xl">A</div>
+                </div>
+                <h2 class="text-2xl font-bold" id="profileName">admin</h2>
+                <p class="text-gray-400" id="profileRole">Kullanıcı</p>
+            </div>
+            <div class="space-y-3">
+                <button onclick="editProfile()" class="w-full flex items-center gap-3 px-4 py-3 glass rounded-xl hover:bg-dark-700 transition text-left">
+                    <i class="fas fa-edit text-accent-cyan"></i><span>Profili Düzenle</span>
+                </button>
+                <button onclick="changePassword()" class="w-full flex items-center gap-3 px-4 py-3 glass rounded-xl hover:bg-dark-700 transition text-left">
+                    <i class="fas fa-lock text-accent-purple"></i><span>Şifre Değiştir</span>
+                </button>
+                <button onclick="showActivity()" class="w-full flex items-center gap-3 px-4 py-3 glass rounded-xl hover:bg-dark-700 transition text-left">
+                    <i class="fas fa-history text-accent-green"></i><span>Aktivite Geçmişi</span>
+                </button>
+                <button onclick="showSettings()" class="w-full flex items-center gap-3 px-4 py-3 glass rounded-xl hover:bg-dark-700 transition text-left">
+                    <i class="fas fa-cog text-gray-400"></i><span>Ayarlar</span>
+                </button>
+            </div>
+            <button onclick="logout()" class="w-full mt-4 py-3 bg-red-500/20 text-red-400 rounded-xl font-semibold btn-press">Çıkış Yap</button>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('editProfileModal')"></div>
+        <div class="relative w-full sm:max-w-md glass-dark rounded-t-3xl sm:rounded-3xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold">Profili Düzenle</h3>
+                <button onclick="closeModal('editProfileModal')" class="w-10 h-10 glass rounded-xl flex items-center justify-center"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div class="text-center mb-4">
+                    <div class="w-20 h-20 mx-auto rounded-full overflow-hidden border-2 border-accent-cyan mb-2">
+                        <div id="editAvatar" class="w-full h-full gradient-cyan flex items-center justify-center text-white font-bold text-2xl">A</div>
+                    </div>
+                    <button onclick="changeAvatar()" class="text-accent-cyan text-sm hover:underline">Avatar Değiştir</button>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Kullanıcı Adı</label>
+                    <div class="glass rounded-2xl flex items-center px-4 py-3">
+                        <i class="fas fa-user text-gray-500 mr-3"></i>
+                        <input type="text" id="editUsername" class="bg-transparent flex-1 outline-none text-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 uppercase tracking-wider mb-2 block">Durum Mesajı</label>
+                    <div class="glass rounded-2xl flex items-center px-4 py-3">
+                        <i class="fas fa-comment text-gray-500 mr-3"></i>
+                        <input type="text" id="editStatus" placeholder="Durum mesajınız..." class="bg-transparent flex-1 outline-none text-white placeholder-gray-600">
+                    </div>
+                </div>
+                <button onclick="saveProfile()" class="w-full py-4 gradient-cyan rounded-2xl font-bold text-lg text-white btn-press neon-cyan">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legal Modal -->
+    <div id="legalModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('legalModal')"></div>
+        <div class="relative w-full sm:max-w-lg glass-dark rounded-t-3xl sm:rounded-3xl p-6 max-h-[85vh] overflow-y-auto scrollbar-hide">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold"><i class="fas fa-shield-alt mr-2 text-accent-cyan"></i>Yasal Beyan</h3>
+                <button onclick="closeModal('legalModal')" class="w-10 h-10 glass rounded-xl flex items-center justify-center"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-4 text-sm text-gray-300 leading-relaxed">
+                <div class="glass rounded-xl p-4 border-l-4 border-accent-cyan">
+                    <h4 class="font-bold text-white mb-2">1. Telif Hakkı Beyanı</h4>
+                    <p>Aynur Sync platformu üzerinden paylaşılan tüm içeriklerin telif hakları ilgili içerik sahiplerine aittir. Platformumuz yalnızca senkronize izleme teknolojisi sağlar ve herhangi bir içeriği barındırmaz, kopyalamaz veya dağıtmaz.</p>
+                </div>
+                <div class="glass rounded-xl p-4 border-l-4 border-accent-purple">
+                    <h4 class="font-bold text-white mb-2">2. Kullanım Sorumluluğu</h4>
+                    <p>Kullanıcılar, yalnızca yasal olarak sahip oldukları veya kamu lisansına sahip içerikleri senkronize edebilir. Telif hakkı ihlali oluşturan içeriklerin senkronizasyonu yasaktır.</p>
+                </div>
+                <div class="glass rounded-xl p-4 border-l-4 border-accent-green">
+                    <h4 class="font-bold text-white mb-2">3. Veri Gizliliği</h4>
+                    <p>Kullanıcı verileri end-to-end şifreleme ile korunur. Sohbet mesajları ve oda bilgileri yalnızca ilgili oda katılımcıları tarafından erişilebilir.</p>
+                </div>
+                <div class="glass rounded-xl p-4 border-l-4 border-yellow-500">
+                    <h4 class="font-bold text-white mb-2">4. DMCA ve İtiraz</h4>
+                    <p>Telif hakkı ihlali bildirimleri için dmca@aynursync.app adresine başvurabilirsiniz. İtirazlar 48 saat içinde değerlendirilir.</p>
+                </div>
+                <div class="glass rounded-xl p-4 border-l-4 border-red-500">
+                    <h4 class="font-bold text-white mb-2">5. Yasal Uyarı</h4>
+                    <p>Bu platform yalnızca eğitim ve kişisel kullanım amaçlıdır. Ticari kullanım yasaktır. Kullanıcılar yerel yasalara uymakla yükümlüdür.</p>
+                </div>
+                <p class="text-center text-gray-500 text-xs mt-4">© 2026 Aynur Sync. Tüm Hakları Saklıdır. | v4.0 Ultimate</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div id="termsModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('termsModal')"></div>
+        <div class="relative w-full sm:max-w-lg glass-dark rounded-t-3xl sm:rounded-3xl p-6 max-h-[85vh] overflow-y-auto scrollbar-hide">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold"><i class="fas fa-file-contract mr-2 text-accent-cyan"></i>Kullanım Koşulları</h3>
+                <button onclick="closeModal('termsModal')" class="w-10 h-10 glass rounded-xl flex items-center justify-center"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-4 text-sm text-gray-300 leading-relaxed">
+                <p class="font-semibold text-white">Son güncelleme: 21 Mayıs 2026</p>
+                <div class="glass rounded-xl p-4">
+                    <h4 class="font-bold text-white mb-2">1. Hizmet Kapsamı</h4>
+                    <p>Aynur Sync, kullanıcıların video içeriklerini senkronize bir şekilde izlemelerini sağlayan bir platformdur. Platform, içerik barındırma hizmeti değil, senkronizasyon teknolojisi sağlar.</p>
+                </div>
+                <div class="glass rounded-xl p-4">
+                    <h4 class="font-bold text-white mb-2">2. Kullanıcı Yükümlülükleri</h4>
+                    <ul class="list-disc list-inside space-y-1 text-gray-400">
+                        <li>Yalnızca yasal içerikleri senkronize edin</li>
+                        <li>Diğer kullanıcılara saygılı davranın</li>
+                        <li>Spam, taciz veya zararlı içerik paylaşmayın</li>
+                        <li>Hesap bilgilerinizi güvende tutun</li>
+                    </ul>
+                </div>
+                <div class="glass rounded-xl p-4">
+                    <h4 class="font-bold text-white mb-2">3. Hesap ve Güvenlik</h4>
+                    <p>Kullanıcılar kendi hesaplarının güvenliğinden sorumludur. Şüpheli aktivite durumunda derhal bildirimde bulunun.</p>
+                </div>
+                <div class="glass rounded-xl p-4">
+                    <h4 class="font-bold text-white mb-2">4. İçerik Politikası</h4>
+                    <p>Aşağıdaki içerikler kesinlikle yasaktır: Şiddet, pornografi, nefret söylemi, telif hakkı ihlali, zararlı yazılım.</p>
+                </div>
+                <div class="glass rounded-xl p-4">
+                    <h4 class="font-bold text-white mb-2">5. Hizmet Değişiklikleri</h4>
+                    <p>Platform özelliklerini ve koşullarını önceden haber vermeksizin değiştirme hakkını saklı tutar.</p>
+                </div>
+                <p class="text-center text-gray-500 text-xs mt-4">Kullanarak bu koşulları kabul etmiş olursunuz.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Creators Modal -->
+    <div id="creatorsModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('creatorsModal')"></div>
+        <div class="relative w-full sm:max-w-md glass-dark rounded-t-3xl sm:rounded-3xl p-6 text-center">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold">Yapımcılar</h3>
+                <button onclick="closeModal('creatorsModal')" class="w-10 h-10 glass rounded-xl flex items-center justify-center"><i class="fas fa-times"></i></button>
+            </div>
+            <p class="text-gray-400 mb-6">Bu uygulama 3 kişilik süper ekip tarafından geliştirildi!</p>
+            <div class="space-y-3">
+                <div class="glass rounded-2xl p-4 flex items-center gap-4">
+                    <div class="w-12 h-12 gradient-purple rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fab fa-instagram text-white text-xl"></i>
+                    </div>
+                    <div class="text-left">
+                        <p class="font-bold">@cupix369</p>
+                        <p class="text-sm text-gray-400">Lead Developer</p>
+                    </div>
+                </div>
+                <div class="glass rounded-2xl p-4 flex items-center gap-4">
+                    <div class="w-12 h-12 gradient-cyan rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fab fa-instagram text-white text-xl"></i>
+                    </div>
+                    <div class="text-left">
+                        <p class="font-bold">@sof_ai_2672</p>
+                        <p class="text-sm text-gray-400">UI/UX Designer</p>
+                    </div>
+                </div>
+                <div class="glass rounded-2xl p-4 flex items-center gap-4">
+                    <div class="w-12 h-12 gradient-green rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fab fa-instagram text-white text-xl"></i>
+                    </div>
+                    <div class="text-left">
+                        <p class="font-bold">@aynurrnyll0</p>
+                        <p class="text-sm text-gray-400">Product Manager</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 pt-4 border-t border-dark-600">
+                <p class="text-gray-400 text-sm">Made with <span class="text-red-500">❤</span> for Aynur</p>
+                <p class="gradient-text-cyan font-bold mt-1">Aynur Sync Ultimate v4.0</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 glass px-6 py-3 rounded-xl z-[60] hidden transition-all">
+        <span id="toastText" class="text-sm font-semibold"></span>
+    </div>
+
+    <script src="anticrack.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
