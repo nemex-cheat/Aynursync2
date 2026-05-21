@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aynur Sync - Beraber Film İzle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="landing">
+        <div class="landing-logo">🎬 Aynur Sync</div>
+        <p class="landing-subtitle">Sevdiğin kişiyle beraber film izle, sohbet et, eğlen!</p>
+
+        <div class="room-grid">
+            <div class="card room-card" onclick="createWatchRoom()">
+                <span class="room-card-icon">▶️</span>
+                <h3>YouTube / Direct Oda</h3>
+                <p>YouTube, Chrome, Dexter ve diğer kaynaklardan film izle</p>
+            </div>
+            <div class="card room-card" onclick="createRawRoom()">
+                <span class="room-card-icon">📁</span>
+                <h3>GitHub Raw Oda</h3>
+                <p>Kendi videolarını yükle, özel film odası oluştur</p>
+            </div>
+        </div>
+
+        <div class="card join-box">
+            <h3>🔑 Odaya Katıl</h3>
+            <div class="join-inputs">
+                <input type="text" class="input" id="joinCode" placeholder="ODA KODU" maxlength="15" autocomplete="off">
+                <button class="btn btn-primary" onclick="joinRoom()">Katıl</button>
+            </div>
+        </div>
+
+        <p style="margin-top: 24px; font-size: 12px; color: #555; text-align: center;">
+            Davet kodunu arkadaşına gönder, beraber izleyin!
+        </p>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <div class="toast-title" id="toastTitle">Bildirim</div>
+        <div class="toast-msg" id="toastMsg">Mesaj</div>
+    </div>
+
+    <script>
+        function createWatchRoom() {
+            const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+            window.location.href = 'watch.html?room=' + roomId;
+        }
+
+        function createRawRoom() {
+            const roomId = 'RAW-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            window.location.href = 'raw-room.html?room=' + roomId;
+        }
+
+        function joinRoom() {
+            const code = document.getElementById('joinCode').value.trim().toUpperCase();
+            if (!code) {
+                showToast('Hata', 'Oda kodu gir!');
+                return;
+            }
+            if (code.startsWith('RAW-')) {
+                window.location.href = 'raw-room.html?room=' + code;
+            } else {
+                window.location.href = 'watch.html?room=' + code;
+            }
+        }
+
+        function showToast(title, msg) {
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMsg').textContent = msg;
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        document.getElementById('joinCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') joinRoom();
+        });
+    </script>
+</body>
+</html>
